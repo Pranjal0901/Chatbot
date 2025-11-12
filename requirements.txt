@@ -6,5 +6,6 @@ pymupdf
 sentence-transformers
 chromadb
 faiss-cpu
+flask
 
 
