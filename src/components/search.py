@@ -27,7 +27,7 @@ class RAGSearch:
             self.vectorstore.build_from_documents(docs)
         else:
             self.vectorstore.load()
-        loader = LoadLLM(model_name="phi")
+        loader = LoadLLM(model_name="tinyllama", num_ctx=2048)
         self.llm = loader.get_model()
 
     # def _build_rag_chain(self):
@@ -65,7 +65,7 @@ class RAGSearch:
         if not context:
             return "No relevant document found."
         prompt = """
-        You are the official AI assistant for [COMPANY NAME].
+        You are the official AI assistant for Tata.
 
         ONLY answer questions about:
         - Sales
@@ -96,13 +96,14 @@ class RAGSearch:
 
         Answer:
         """
-        response = self.llm.invoke([prompt])
-        return response.content
+        final_prompt = prompt.format(context=context,question=query)
+        response = self.llm.invoke(final_prompt)
+        return response
     
 
 # Example Usage
-if __name__=="__main__":
-    rag_search = RAGSearch()
-    query = "What is sales?"
-    summary = rag_search.search_and_summarize(query,top_k=3)
-    print("Summary:", summary)
+# if __name__=="__main__":
+#     rag_search = RAGSearch()
+#     query = "What is sales?"
+#     summary = rag_search.search_and_summarize(query,top_k=3)
+#     print("Summary:", summary)

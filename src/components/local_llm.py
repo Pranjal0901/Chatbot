@@ -2,19 +2,8 @@ from langchain_ollama import OllamaLLM
 from langchain_core.language_models.llms import LLM
 
 class LoadLLM:
-    """
-    Wrapper class to load and manage a locally running Ollama LLM model for LangChain.
 
-    Requirements:
-    - Ollama installed and running locally (https://ollama.com)
-    - Model pulled via: `ollama pull mistral`
-
-    Example:
-        llm_loader = LoadLLM(model_name="mistral")
-        llm = llm_loader.get_model()
-    """
-
-    def __init__(self, model_name: str = "phi", temperature: float = 0.2, num_ctx: int = 4096):
+    def __init__(self, model_name: str = "tinyllama", temperature: float = 0.2, num_ctx: int = 2048):
         self.model_name = model_name
         self.temperature = temperature
         self.num_ctx = num_ctx
