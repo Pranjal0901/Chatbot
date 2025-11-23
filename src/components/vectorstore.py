@@ -1,3 +1,4 @@
+import yaml
 import os 
 import faiss
 import numpy as np
@@ -7,16 +8,19 @@ from sentence_transformers import SentenceTransformer
 from src.components.embedding import EmbeddingPipeline
 
 class FaissVectorStore:
-    def __init__(self,persist_dir:str = "faiss_store", embedding_model:str = "all-MiniLM-L6-v2",chunk_size:int=1000, chunk_overlap:int = 200):
-        self.persist_dir = persist_dir
+    def __init__(self,config_path: str = "config.yaml"):
+        with open(config_path, "r") as file:
+            config = yaml.safe_load(file)
+
+        self.persist_dir = config["rag"]["persist_dir"]
         os.makedirs(self.persist_dir,exist_ok=True)
         self.index = None
         self.metadata = []
-        self.embedding_model = embedding_model
-        self.model = SentenceTransformer(embedding_model)
-        self.chunk_size = chunk_size
-        self.chunk_overlap = chunk_overlap
-        print(f"[INFO] Loaded embedding model:{embedding_model}")
+        self.embedding_model = config["rag"]["embedding_model"]
+        self.model = SentenceTransformer(self.embedding_model)
+        self.chunk_size = config["rag"]["chunk_size"]
+        self.chunk_overlap = config["rag"]["chunk_overlap"]
+        print(f"[INFO] Loaded embedding model:{self.embedding_model}")
     
 
     def build_from_documents(self, documents: List[Any]):

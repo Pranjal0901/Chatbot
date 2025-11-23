@@ -1,12 +1,15 @@
+import yaml
 from langchain_ollama import OllamaLLM
 from langchain_core.language_models.llms import LLM
 
 class LoadLLM:
 
-    def __init__(self, model_name: str = "tinyllama", temperature: float = 0.2, num_ctx: int = 2048):
-        self.model_name = model_name
-        self.temperature = temperature
-        self.num_ctx = num_ctx
+    def __init__(self, config_path: str = "config.yaml"):
+        with open(config_path, "r") as file:
+            config = yaml.safe_load(file)
+        self.model_name = config["llm"]["model_name"]
+        self.temperature = config["llm"]["temperature"]
+        self.num_ctx = config["llm"]["num_ctx"]
         self.llm = None
 
         print(f"[INFO] Initializing local LLM '{self.model_name}'...")

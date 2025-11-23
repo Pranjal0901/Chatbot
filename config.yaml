@@ -1,0 +1,44 @@
+llm:
+  model_name: "mistral"
+  temperature: 0.2
+  num_ctx: 4096
+
+rag:
+  persist_dir: "faiss_store"
+  embedding_model: "all-MiniLM-L6-v2"
+  chunk_size: 1000
+  chunk_overlap: 200
+
+prompt:
+  system:
+    company_name: "Tata"                # Whatever you want
+    allowed_topics:                     # Domain Topics
+      - "sales"
+      - "marketing"
+      - "lead generation"
+      - "company products & services"
+      - "company policies"
+    disallowed_response: "I can only assist with sales and marketing questions related to our company."
+    competitor_response: "I cannot discuss other companies. Please ask about our company's sales and marketing."
+
+  template: |
+    You are the official AI assistant for {company_name}.
+
+    ONLY answer questions about:
+    {allowed_topics}
+
+    If a user asks anything outside these domains, reply:
+    "{disallowed_response}"
+
+    If someone asks about another company:
+    "{competitor_response}"
+
+    Use the context below (if provided) to answer clearly.
+
+    Context:
+    {context}
+
+    Question:
+    {question}
+
+    Answer:

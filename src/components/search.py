@@ -1,62 +1,38 @@
+import yaml
 import os
-from dotenv import load_dotenv
-# from langchain_core.prompts import PromptTemplate
-# from langchain_core.runnables import RunnableMap, RunnablePassthrough
+from src.components.data_loader import load_all_documents
 from src.components.vectorstore import FaissVectorStore
 from src.components.local_llm import LoadLLM
-
-load_dotenv()
-
 
 class RAGSearch:
     """
      Retrieves company-relevant information & answers strictly
-     sales/marketing related questions using a local LLM.
+     domain related questions using a local LLM.
     """
 
-    def __init__(self, persist_dir: str = "faiss_store", embedding_model: str = "all-MiniLM-L6-v2"):
+    def __init__(self, config_path: str = "config.yaml"):
+        with open(config_path, "r") as file:
+            config = yaml.safe_load(file)
         
+        persist_dir = config["rag"]["persist_dir"]
+        embedding_model = config["rag"]["embedding_model"]
+
         # Initialize FAISS retriever
         self.vectorstore = FaissVectorStore(persist_dir,embedding_model)
+
         # Load or build vectorstore
         faiss_path = os.path.join(persist_dir,"faiss.index")
         meta_path = os.path.join(persist_dir,"metadata.pkl")
         if not(os.path.exists(faiss_path) and os.path.exists(meta_path)):
-            from data_loader import load_all_documents
             docs = load_all_documents("data")
-            self.vectorstore.build_from_documents(docs)
         else:
             self.vectorstore.load()
-        loader = LoadLLM(model_name="tinyllama", num_ctx=2048)
+
+        loader = LoadLLM(
+            model_name=config["llm"]["model_name"],
+            num_ctx=config["llm"]["num_ctx"]
+        )
         self.llm = loader.get_model()
-
-    # def _build_rag_chain(self):
-    #     """
-    #     Build LCEL Retrieval-Augmented Generation pipeline.
-    #     """
-    #     llm_loader = LoadLLM(model_name="phi")
-    #     llm = llm_loader.get_model()
-
-
-
-    #     prompt = PromptTemplate(
-    #         template=prompt_template,
-    #         input_variables=["context", "question"]
-    #     )
-
-    #     # LCEL RAG pipeline
-    #     rag_chain = (
-    #         RunnableMap({
-    #             "context": lambda x: self.retriever.get_relevant_documents(x["question"]),
-    #             "question": lambda x: x["question"]
-    #         })
-    #         | prompt
-    #         | llm
-    #         | RunnablePassthrough()
-    #     )
-
-    #     print("[INFO] 🔗 LCEL RAG pipeline successfully built.")
-    #     return rag_chain
 
     def search_and_summarize(self, query: str,top_k:int = 5) -> str:
         results = self.vectorstore.query(query,top_k=top_k)
@@ -64,6 +40,29 @@ class RAGSearch:
         context = "\n\n".join(texts)
         if not context:
             return "No relevant document found."
+        
+        # # Loading prompt using YAML file
+        # with open("config.yaml","r") as file:
+        #     config = yaml.safe_load(file)
+
+        # prompt_cfg = config["prompt"]
+        # system_cfg = prompt_cfg["system"]
+        # template = prompt_cfg["template"]
+
+
+        # # Build allowed topics bullet list
+        # allowed_topics_formatted = "\n".join(f"- {t}" for t in system_cfg["allowed_topics"])
+        
+        # # Main template
+        # final_prompt = template.format(
+        #     company_name=system_cfg["company_name"],
+        #     allowed_topics=allowed_topics_formatted,
+        #     disallowed_response=system_cfg["disallowed_response"],
+        #     competitor_response=system_cfg["competitor_response"],
+        #     context=context,
+        #     question=query
+        # )
+        
         prompt = """
         You are the official AI assistant for Tata.
 
@@ -99,11 +98,3 @@ class RAGSearch:
         final_prompt = prompt.format(context=context,question=query)
         response = self.llm.invoke(final_prompt)
         return response
-    
-
-# Example Usage
-# if __name__=="__main__":
-#     rag_search = RAGSearch()
-#     query = "What is sales?"
-#     summary = rag_search.search_and_summarize(query,top_k=3)
-#     print("Summary:", summary)
