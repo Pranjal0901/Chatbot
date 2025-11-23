@@ -36,7 +36,7 @@ Documents → Chunking → Embeddings → FAISS Index → Retrieval → Prompt F
 | `config.yaml` | Centralized settings |
 
 # Project Structure
-CHATBOT/
+```CHATBOT/
 │
 ├─ .venv/                      # Python virtual environment
 ├─ data/                       # Source documents for RAG
@@ -61,7 +61,7 @@ CHATBOT/
 ├─ requirements.txt            # Python package dependencies
 ├─ setup.py                    # Packaging / installation script
 └─ .gitignore                  # Git ignored files
-
+```
 
 # Installation & Setup
 1. Clone the repository
@@ -84,5 +84,5 @@ ollama pull mistral
 
 # Author
 
-Pranjal Singh 
+Pranjal Singh | 
 AI | RAG 
