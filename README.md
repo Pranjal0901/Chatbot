@@ -36,26 +36,36 @@ Documents → Chunking → Embeddings → FAISS Index → Retrieval → Prompt F
 | `config.yaml` | Centralized settings |
 
 # Project Structure
-project/
+CHATBOT/
+│
+├─ .venv/                      # Python virtual environment
+├─ data/                       # Source documents for RAG
+├─ faiss_store/                # Stored FAISS index & metadata
 │
 ├─ src/
-│ ├─ components/
-│ │ ├─ data_loader.py
-│ │ ├─ embedding.py
-│ │ ├─ vectorstore.py
-│ │ ├─ local_llm.py
-│ │
-│ ├─ rag_search.py
+│  ├─ __pycache__/
+│  │
+│  ├─ components/
+│  │  ├─ __pycache__/
+│  │  ├─ data_loader.py        # Loads PDFs, DOCX, CSV, JSON, Excel
+│  │  ├─ embedding.py          # Chunking + embeddings generation
+│  │  ├─ local_llm.py          # Loads LLM via Ollama (YAML driven)
+│  │  ├─ search.py             # RAG search logic
+│  │  └─ vectorstore.py        # FAISS vector storage & retrieval
+│  │
+│  └─ templates/               # (For UI, prompts, or HTML if needed)
 │
-├─ data/ # Place your documents here
-├─ faiss_store/ # Auto-generated vector index
-├─ config.yaml # Configuration file
-├─ requirements.txt
-├─ README.md
+├─ application.py              # Entry point / execution script
+├─ config.yaml                 # Central configuration file
+├─ README.md                   # Project documentation
+├─ requirements.txt            # Python package dependencies
+├─ setup.py                    # Packaging / installation script
+└─ .gitignore                  # Git ignored files
+
 
 # Installation & Setup
 1. Clone the repository
-git clone <your-repo-url>
+git clone <[https://github.com/Pranjal0901/Chatbot.git]>
 cd project
 2. Install dependencies
 pip install -r requirements.txt
@@ -65,25 +75,14 @@ ollama pull mistral
 5. Run a sample query
 
 # How It Works Internally
-1. Document Loading
-Scans folder and loads supported formats
-
-2. Chunking
-Documents are broken into overlapping text blocks
-
-3. Embedding
-Chunks converted into dense vectors using SentenceTransformers
-
-4. FAISS Indexing
-Vectors stored for fast similarity lookup
-
-5. Querying
-User question embedded and compared to stored vectors
-
-6. Local LLM Generates Answer
-Based only on allowed topics and given rules
+1. Document Loading - Scans folder and loads supported formats
+2. Chunking - Documents are broken into overlapping text blocks
+3. Embedding - Chunks converted into dense vectors using Sentence Transformers
+4. FAISS Indexing - Vectors stored for fast similarity lookup
+5. Querying - User question embedded and compared to stored vectors
+6. Local LLM Generates Answer - Based only on allowed topics and given rules
 
 # Author
 
-Pranjal Singh
-AI | RAG | Automation Systems
+Pranjal Singh 
+AI | RAG 
