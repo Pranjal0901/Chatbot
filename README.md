@@ -37,7 +37,6 @@ Documents → Chunking → Embeddings → FAISS Index → Retrieval → Prompt F
 
 # Project Structure
 ```CHATBOT/
-│
 ├─ .venv/                      # Python virtual environment
 ├─ data/                       # Source documents for RAG
 ├─ faiss_store/                # Stored FAISS index & metadata
@@ -64,16 +63,54 @@ Documents → Chunking → Embeddings → FAISS Index → Retrieval → Prompt F
 ```
 
 # Installation & Setup
-1. Clone the repository
-git clone <[https://github.com/Pranjal0901/Chatbot.git]>
-cd project
-2. Install dependencies
-pip install -r requirements.txt
-3. Install & start Ollama
-ollama pull mistral
-4. Add documents
-5. Run a sample query
 
+**Clone the repository**
+
+```bash
+git clone https://github.com/Pranjal0901/Chatbot.git
+cd Chatbot
+```
+
+**Create and activate virtual environment**
+
+**Windows**
+
+```bash
+python -m venv .venv
+.\.venv\Scripts\activate
+```
+
+**macOS / Linux**
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+**Install dependencies**
+
+```bash
+pip install -r requirements.txt
+```
+
+**Install & start Ollama**
+
+```bash
+ollama pull mistral
+```
+
+**Add documents**
+Place files inside:
+
+```
+data/
+```
+
+**Run a sample query**
+
+```bash
+python application.py
+```
 # How It Works Internally
 1. Document Loading - Scans folder and loads supported formats
 2. Chunking - Documents are broken into overlapping text blocks
@@ -83,6 +120,7 @@ ollama pull mistral
 6. Local LLM Generates Answer - Based only on allowed topics and given rules
 
 # Author
-
+```
 Pranjal Singh | 
 AI | RAG 
+```
