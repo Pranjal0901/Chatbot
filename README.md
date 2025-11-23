@@ -1,8 +1,9 @@
-#  Local RAG Search System with Configurable YAML Pipeline
+#  Domain Specific Chatbot Using RAG
 
 ## Introduction
-This project implements a **fully local Retrieval-Augmented Generation (RAG) system** that allows users to query company-related information using documents stored on their machine.  
-It works without cloud dependencies and ensures **data privacy**, making it ideal for enterprise environments.
+The **Domain Specific Chatbot using RAG and LLM** is an intelligent assistant designed to answer queries strictly within a defined knowledge domain using organization-specific documents. It retrieves relevant information from internal data sources and combines it with a local Large Language Model to generate accurate, context-aware responses. 
+This approach ensures reliability, reduces hallucinations, and maintains data privacy by running entirely offline.
+
 
 The system:
 - Loads documents from a folder
@@ -13,12 +14,10 @@ The system:
 
 # Key Features
 ✅ 100% local execution (no external APIs)  
-✅ Multi-format document ingestion:
-- PDF, DOCX, TXT, CSV, JSON, Excel  
+✅ Multi-format document ingestion:PDF, DOCX, TXT, CSV, JSON, Excel  
 ✅ Configurable embeddings and chunking  
 ✅ FAISS-based similarity search  
 ✅ Local LLM inference via Ollama  
-✅ YAML-driven settings (models, paths, prompts, topics)  
 ✅ Modular and extendable architecture  
 
 # System Architecture
@@ -33,7 +32,7 @@ Documents → Chunking → Embeddings → FAISS Index → Retrieval → Prompt F
 | `embedding.py` | Splits text and generates embeddings |
 | `vectorstore.py` | Stores and queries embeddings using FAISS |
 | `local_llm.py` | Loads and manages local LLM |
-| `rag_search.py` | Performs retrieval + generation workflow |
+| `search.py` | Performs retrieval + generation workflow |
 | `config.yaml` | Centralized settings |
 
 # Project Structure
@@ -54,7 +53,7 @@ project/
 ├─ requirements.txt
 ├─ README.md
 
-Installation & Setup
+# Installation & Setup
 1. Clone the repository
 git clone <your-repo-url>
 cd project
@@ -65,42 +64,26 @@ ollama pull mistral
 4. Add documents
 5. Run a sample query
 
-🤖 How It Works Internally
-1️⃣ Document Loading
-
+# How It Works Internally
+1. Document Loading
 Scans folder and loads supported formats
 
-2️⃣ Chunking
-
+2. Chunking
 Documents are broken into overlapping text blocks
 
-3️⃣ Embedding
-
+3. Embedding
 Chunks converted into dense vectors using SentenceTransformers
 
-4️⃣ FAISS Indexing
-
+4. FAISS Indexing
 Vectors stored for fast similarity lookup
 
-5️⃣ Querying
-
+5. Querying
 User question embedded and compared to stored vectors
 
-6️⃣ Prompt Construction
-
-Template injected with:
-
-context
-
-company name
-
-allowed topics
-
-7️⃣ Local LLM Generates Answer
-
+6. Local LLM Generates Answer
 Based only on allowed topics and given rules
 
-Author
+# Author
 
 Pranjal Singh
 AI | RAG | Automation Systems
