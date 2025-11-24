@@ -10,15 +10,15 @@ class RAGSearch:
      domain related questions using a local LLM.
     """
 
-    def __init__(self, config_path: str = "config.yaml"):
+    def _init_(self, persist_dir: str = None, embedding_model: str = None, config_path: str = "config.yaml"):
         with open(config_path, "r") as file:
             config = yaml.safe_load(file)
         
-        persist_dir = config["rag"]["persist_dir"]
-        embedding_model = config["rag"]["embedding_model"]
+        self.persist_dir = persist_dir or config["rag"]["persist_dir"]
+        self.embedding_model = embedding_model or config["rag"]["embedding_model"]
 
         # Initialize FAISS retriever
-        self.vectorstore = FaissVectorStore(persist_dir,embedding_model)
+        self.vectorstore = FaissVectorStore(persist_dir = self.persist_dir,embedding_model = self.embedding_model)
 
         # Load or build vectorstore
         faiss_path = os.path.join(persist_dir,"faiss.index")

@@ -8,15 +8,15 @@ from sentence_transformers import SentenceTransformer
 from src.components.embedding import EmbeddingPipeline
 
 class FaissVectorStore:
-    def __init__(self,config_path: str = "config.yaml"):
+    def _init_(self,persist_dir:str = None,embedding_model:str=None,config_path: str = "config.yaml"):
         with open(config_path, "r") as file:
             config = yaml.safe_load(file)
 
-        self.persist_dir = config["rag"]["persist_dir"]
+        self.persist_dir = persist_dir or config["rag"]["persist_dir"]
         os.makedirs(self.persist_dir,exist_ok=True)
         self.index = None
         self.metadata = []
-        self.embedding_model = config["rag"]["embedding_model"]
+        self.embedding_model = embedding_model or config["rag"]["embedding_model"]
         self.model = SentenceTransformer(self.embedding_model)
         self.chunk_size = config["rag"]["chunk_size"]
         self.chunk_overlap = config["rag"]["chunk_overlap"]

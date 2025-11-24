@@ -6,14 +6,14 @@ import numpy as np
 from src.components.data_loader import load_all_documents
 
 class EmbeddingPipeline:
-    def __init__(self, config_path: str = "config.yaml"):
+    def _init_(self, config_path: str = "config.yaml"):
         with open(config_path, "r") as file:
             config = yaml.safe_load(file)
 
         self.chunk_size = config["rag"]["chunk_size"]
         self.chunk_overlap = config["rag"]["chunk_overlap"]
-        self.model = SentenceTransformer(config["rag"]["model_name"])
-        print(f"[INFO] Loaded embedding model: {config["rag"]["model_name"]}")
+        self.model = SentenceTransformer(config['llm']['model_name'])
+        print(f"[INFO] Loaded embedding model: {config['llm']['model_name']}")
 
     def chunk_documents(self, documents:List[Any])->List[Any]:
         splitter = RecursiveCharacterTextSplitter(
@@ -32,4 +32,3 @@ class EmbeddingPipeline:
         embeddings = self.model.encode(texts, show_progress_bar = True)
         print(f"[INFO] Embeddings shape:{embeddings.shape}")
         return embeddings
-         

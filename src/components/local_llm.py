@@ -4,12 +4,12 @@ from langchain_core.language_models.llms import LLM
 
 class LoadLLM:
 
-    def __init__(self, config_path: str = "config.yaml"):
+    def _init_(self, model_name: str = None, temperature: float = None, num_ctx: int = None, config_path: str = "config.yaml"):
         with open(config_path, "r") as file:
             config = yaml.safe_load(file)
-        self.model_name = config["llm"]["model_name"]
-        self.temperature = config["llm"]["temperature"]
-        self.num_ctx = config["llm"]["num_ctx"]
+        self.model_name = model_name or config["llm"]["model_name"]
+        self.temperature = temperature or config["llm"]["temperature"]
+        self.num_ctx = num_ctx or config["llm"]["num_ctx"]
         self.llm = None
 
         print(f"[INFO] Initializing local LLM '{self.model_name}'...")
